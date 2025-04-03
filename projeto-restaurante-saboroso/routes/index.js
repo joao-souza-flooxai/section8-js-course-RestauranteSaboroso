@@ -1,26 +1,22 @@
 var con = require("./../inc/db");
 var express = require('express');
 var router = express.Router();
+var menus = require('./../inc/menus');
+var reservations = require('./../inc/reservations');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   
-   con.query(
-    `SELECT * FROM tb_menus ORDER BY title `
-   ,(err, results)=>{
+  menus.getMenus().then(results=>{
+    
+    res.render('index', {
+      title: 'Restaurante Saboroso!',
+      menus: results,
+      isHome: true
 
-      if(err){
-        console.log(err);
-        return res.status(500).send("Erro no banco de dados.");
-      }
+    });
 
-      res.render('index', {
-        title: 'Restaurante Saboroso!',
-        menus: results
-
-      });
-
-   });
+  });
   
 });
 
@@ -34,20 +30,55 @@ router.get('/contacts', function(req, res, next) {
 });
 
 router.get('/menus', function(req, res, next) {
+  
+  menus.getMenus().then(results=>{
+    
     res.render('menus',{
       title: 'Menus - Restaurante Saboroso!',
       background: 'images/img_bg_1.jpg',
-      h1: 'Saboreie nosso menu!'
+      h1: 'Saboreie nosso menu!',
+      menus:results
     });
+
+  });
+  
+  
 });
 
 router.get('/reservations', function(req, res, next) {
-    res.render('reservations',{
-      title: 'Reservations - Restaurante Saboroso!',
-      background: 'images/img_bg_2.jpg',
-      h1: 'Reserve uma Mesa!'
-    });
+
+  reservations.render(req, res);
+  
 });
+
+
+router.post('/reservations', function(req, res, next) {
+
+  if (!req.body.name) {
+    reservations.render(req, res, "Digite o nome");
+  } else if (!req.body.email) {
+    reservations.render(req, res, "Digite o e-mail");
+  } else if (!req.body.people) {
+    reservations.render(req, res, "Selecione o numero de pessoas");
+  } else if (!req.body.date) {
+    reservations.render(req, res, "Selecione a data");
+  } else if (!req.body.time) {
+    reservations.render(req, res, "Selecione a hora");
+  } else {
+
+    reservations.save(req.body).then(results => {
+
+        req.body = {};
+
+        reservations.render(req, res, null, "Reserva realizada com sucesso!");
+    }).catch(err => {
+        reservations.render(req, res, err.message);
+    });
+
+  }
+
+});
+
 
 router.get('/services', function(req, res, next) {
     res.render('services',{
