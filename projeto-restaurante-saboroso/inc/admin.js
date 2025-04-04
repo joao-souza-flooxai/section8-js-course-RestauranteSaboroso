@@ -1,5 +1,26 @@
+const conn = require('./db');
+
+
 module.exports = {
 
+    dashboard(){
+        
+        return new Promise((resolve, reject) => {
+            conn.query(`
+                SELECT
+                    (SELECT COUNT(*) FROM tb_contacts) AS nrContacts,
+                    (SELECT COUNT(*) FROM tb_menus) AS nrMenus,
+                    (SELECT COUNT(*) FROM tb_reservations) AS nrReservations,
+                    (SELECT COUNT(*) FROM tb_users) AS nrUsers;
+                `, (error, results) => {
+
+                        if (error) reject(error);
+                        else resolve(results[0]);
+                
+                    });
+        });
+        
+    },
 
     getParams(req, params) {
         return Object.assign({}, {
