@@ -67,7 +67,7 @@
     <div class="modal fade" id="modal-create">
       <div class="modal-dialog">
         <div class="modal-content" style="border-top: 3px solid #00a65a;">
-          <form method="post">
+          <form method="post" action="/admin/menus">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -107,7 +107,7 @@
     <div class="modal fade" id="modal-update">
       <div class="modal-dialog">
         <div class="modal-content" style="border-top: 3px solid #00c0ef;">
-          <form method="post">
+          <form method="post" action="/admin/menus">
             <input type="hidden" name="id">
             <div class="modal-header">
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -147,30 +147,28 @@
 
 <%- include("inc/footer") -%>
 
+<script src="/js/hcode-filereader.js"></script>
+<script src="/js/hcode-formsave.js"></script>
 <script>
+    new HcodeFileReader("#modal-create [type=file]", "#modal-create img");
+    new HcodeFileReader("#modal-update [type=file]", "#modal-update img");
   
   let formCreate = document.querySelector("#modal-create form");
-  formCreate.addEventListener('submit', e => {
-      e.preventDefault();
-      let formCreateData = new FormData(formCreate);
-      fetch("/admin/menus", {
-          method: "POST",
-          body: formCreateData
-      })
-      .then(response => response.json())
-      .then(json => {
-          window.location.reload();
-      });
-  });
+  formCreate.save().then(json=>{
+    window.location.reload();
+  }).catch(err=>{
 
-  [...document.querySelectorAll('.btn-update')].forEach(btn => {
-    btn.addEventListener('click', e => {
-        console.log(e);
-    });
   });
-
 
   let formUpdate = document.querySelector("#modal-update form");
+  formUpdate.save().then(json=>{
+     window.location.reload();
+  }).catch(err=>{
+
+  });
+
+
+
 
 [...document.querySelectorAll('.btn-update')].forEach(btn => {
   btn.addEventListener('click', event => {
@@ -185,8 +183,8 @@
     for (let name in data) {
       switch (name) {
         case 'photo':
-         
-          break;
+          formUpdate.querySelector("img").src = '/' + data[name];
+        break;
         default:
           let input = formUpdate.querySelector(`[name=${name}]`);
           if (input) input.value = data[name];
