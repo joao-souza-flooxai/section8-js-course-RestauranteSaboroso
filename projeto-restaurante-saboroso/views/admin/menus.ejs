@@ -150,16 +150,18 @@
 <script src="/js/hcode-filereader.js"></script>
 <script src="/js/hcode-formsave.js"></script>
 <script>
+  //Plugin para preview de fotos
     new HcodeFileReader("#modal-create [type=file]", "#modal-create img");
     new HcodeFileReader("#modal-update [type=file]", "#modal-update img");
   
+  //Save no Create alterando o prototype action padrão para chamar o save
   let formCreate = document.querySelector("#modal-create form");
   formCreate.save().then(json=>{
     window.location.reload();
   }).catch(err=>{
 
   });
-
+//Save no update alterando o prototype action padrão para chamar o save
   let formUpdate = document.querySelector("#modal-update form");
   formUpdate.save().then(json=>{
      window.location.reload();
@@ -168,7 +170,34 @@
   });
 
 
+  [...document.querySelectorAll('.btn-delete')].forEach(btn => {
 
+    btn.addEventListener('click', e => {
+
+      let tr = event.target.closest('tr');
+
+       if (!tr) return; 
+
+      let data = JSON.parse(tr.dataset.row);
+
+      if (confirm(`Deseja realmente excluir o menu ${data.title}?`)) {
+
+        fetch(`/admin/menus/${data.id}`, {
+            method: 'DELETE'
+        })
+        .then(response => response.json())
+        .then(json => {
+            window.location.reload();
+        });
+      }
+    });
+
+});
+
+
+
+
+  //Evento do botão edit que recupera os dados que estão na tr especifica e popula o form update
 
 [...document.querySelectorAll('.btn-update')].forEach(btn => {
   btn.addEventListener('click', event => {
@@ -191,6 +220,7 @@
       }
     }
 
+    //abre o form update
     $("#modal-update").modal("show");
 
   });
