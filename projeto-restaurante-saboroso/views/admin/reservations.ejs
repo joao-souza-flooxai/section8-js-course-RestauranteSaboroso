@@ -200,3 +200,24 @@
 
   
 <%- include("inc/footer") -%>
+
+<script src="/js/hcode-filereader.js"></script>
+
+<script>
+
+//Save no Create alterando o prototype action padrão para chamar o save
+let formCreate = document.querySelector("#modal-create form");
+  formCreate.save().then(json=>{
+    window.location.reload();
+  }).catch(err=>{
+
+  });
+//Save no update alterando o prototype action padrão para chamar o save
+  let formUpdate = document.querySelector("#modal-update form");
+  formUpdate.save().then(json=>{
+     window.location.reload();
+  }).catch(err=>{
+
+  });
+
+</script>
