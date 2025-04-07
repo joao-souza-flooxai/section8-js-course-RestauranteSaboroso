@@ -27,12 +27,18 @@ class HcodeGrid{
         this.options = Object.assign({}, {
             formCreate: '#modal-create form',
             formUpdate: '#modal-update form',
-            btnUpdate: '.btn-update',
-            btnDelete: '.btn-delete'
+            btnUpdate: 'btn-update',
+            btnDelete: 'btn-delete',
+            onUpdateLoad: (form, name, data) => {
+                console.log("onUpdateLoad called", { name, data });
+                let input =  form.querySelector('[name=' + name + ']');
+                if(input) input.value = data[name];
+            }
         }, configs);
     
         this.formCreate = document.querySelector(this.options.formCreate);
         this.formUpdate = document.querySelector(this.options.formUpdate);
+        this.rows = [...document.querySelectorAll('table tbody tr')];
     
         this.initForms();
         this.initButtons();

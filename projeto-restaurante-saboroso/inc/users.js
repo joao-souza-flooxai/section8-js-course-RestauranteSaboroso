@@ -59,11 +59,12 @@ module.exports = {
 
             if (parseInt(fields.id) > 0) {
 
+
                 params.push(fields.id);
                 query = `
                     UPDATE tb_users
                     SET name = ?,
-                        email = ?,
+                        email = ?
                     WHERE id = ?
                 `;
          
