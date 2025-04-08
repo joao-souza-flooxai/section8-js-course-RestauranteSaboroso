@@ -31,5 +31,37 @@ module.exports = {
                 else  resolve(results);
             });
         });
-    }
+    },
+
+    getContacts() {
+        return new Promise((resolve, reject) => {
+            conn.query(`
+                SELECT * FROM tb_contacts ORDER BY register DESC
+            `, (err, results) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(results);
+                }
+            });
+        });
+    },
+
+    delete(id) {
+        console.log("chegou aqui no contacts", id);
+        return new Promise((resolve, reject) => {
+            conn.query(
+                'DELETE FROM tb_contacts WHERE id = ?',
+                [id],
+                (err, results) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve(results);
+                    }
+                }
+            );
+        });
+    },
+
 }

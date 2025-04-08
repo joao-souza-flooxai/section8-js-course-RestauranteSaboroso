@@ -21,6 +21,21 @@
 <script src="js/moment.min.js"></script>
 <script src="js/bootstrap-datetimepicker.min.js"></script>
 
+<script src="/js/hcode-formsave.js"></script>
 
 <!-- Main -->
 <script src="js/main.js"></script>
+
+<script>
+let formsubscribe = document.querySelector("#form-subscribe");
+if (formsubscribe) {
+    formsubscribe.save({
+        success: function() {
+            alert("E-mail cadastrado com sucesso!");
+        },
+        failure: function(err) {
+            alert(err);
+        }
+    });
+}
+</script>

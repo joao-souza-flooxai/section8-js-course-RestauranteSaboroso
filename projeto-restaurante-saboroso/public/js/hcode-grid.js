@@ -46,23 +46,28 @@ class HcodeGrid{
     
 
     initForms() {
-        this.formCreate.save({
-            success: () => {
-                this.fireEvent('afterFormCreate');
-            },
-            failure: () => {
-                this.fireEvent('afterFormCreateError');
-            }
-        });
 
-        this.formUpdate.save({
-            success: () => {
-                this.fireEvent('afterFormUpdate');
-            },
-            failure: () => {
-                this.fireEvent('afterFormUpdateError');
-            }
-        });
+        if (this.formCreate) {
+            this.formCreate.save({
+                success: () => {
+                    this.fireEvent('afterFormCreate');
+                },
+                failure: () => {
+                    this.fireEvent('afterFormCreateError');
+                }
+            });
+        }
+
+        if (this.formUpdate) {
+            this.formUpdate.save({
+                success: () => {
+                    this.fireEvent('afterFormUpdate');
+                },
+                failure: () => {
+                    this.fireEvent('afterFormUpdateError');
+                }
+            });
+        }
 
     }
 
@@ -94,7 +99,7 @@ class HcodeGrid{
 
     btnDeleteClick(e){
 
-        
+        console.log("chegou aqui hcode-grid");
         this.fireEvent('beforeUpdateClick');
         
         let tr = event.target.closest('tr');
@@ -106,7 +111,7 @@ class HcodeGrid{
         if (confirm("Deseja realmente excluir?")) {
 
             const url = this.options.deleteUrl.replace('${data.id}', data.id);
-
+            console.log(url);
             fetch(url, {
                 method: 'DELETE'
             })
