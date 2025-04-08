@@ -179,6 +179,15 @@ router.delete("/reservations/:id", function(req, res, next) {
 });
 
 
+router.get("/reservations/chart", function(req, res, next) {
+    req.query.start = (req.query.start) ? req.query.start : moment().subtract(1, "year").format("YYYY-MM-DD");
+    req.query.end = (req.query.end) ? req.query.end : moment().format("YYYY-MM-DD");
+    reservations.chart(req).then(chartData => {
+        res.send(chartData);
+    });
+});
+
+
 router.get("/users", function (req, res, next) {
     users.getUsers().then(data => {
         res.render("admin/users", admin.getParams(req, {
