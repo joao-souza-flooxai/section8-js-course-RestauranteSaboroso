@@ -9,8 +9,6 @@ var formidable = require('formidable');
 var path = require('path');
 var http = require("http");
 var socket = require("socket.io");
-var indexRouter = require("./routes/index");
-var adminRouter = require("./routes/admin");
 
 var app = express();
 
@@ -19,10 +17,19 @@ var io = socket(http);
 
 io.on("connection", function(socket){
   console.log("conectado");
+  io.emit("reservations update", {
+    date: new Date()
+  });
 });
+
+var indexRouter = require("./routes/index")(io);
+var adminRouter = require("./routes/admin")(io);
 
 //Middleware para formulários.
 app.use(function(req, res, next) {
+
+  req.body= {};
+
     if (req.method === 'POST') {
         var form = new formidable.IncomingForm({
             uploadDir: path.join(__dirname, "/public/images"),
